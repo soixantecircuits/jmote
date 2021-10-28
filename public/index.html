@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit config</title>
+</head>
+<body>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/9.5.6/jsoneditor.min.css" rel="stylesheet" type="text/css">
+  <style type="text/css">
+    body {
+      width: 600px;
+      font: 11pt sans-serif;
+    }
+    #jsoneditor {
+      width: 100%;
+      height: 500px;
+    }
+
+  </style>
+  <script src="/jsoneditor.min.js"></script>
+</head>
+<body>
+<h1>Configuration</h1>
+<p>
+  Vous éditez un fichier de configuration. Vous risquez de l'abimer. Attention.
+</p>
+<button class="save" id="saveJson">Sauvegarder</button>
+<div id="jsoneditor"></div>
+
+<script type="module">
+  import ky from '/ky.js';
+  let editor 
+  
+  document.getElementById('saveJson').onclick = async () => {
+    let newData = editor.get()
+    const json = await ky.post('/saveconfig', {json: newData}).json()
+  }
+
+
+  fetch('/config').then(response => {
+    return response.json()
+  }).then(data => {
+    // Work with JSON data here
+    console.log(data)
+    const json = data
+
+    const options = {
+      mode: 'tree',
+      modes: ['code', 'tree', 'preview'],
+      onValidate: function (json) {
+        // rules:
+        // - team, names, and ages must be filled in and be of correct type
+        // - a team must have 4 members
+        // - at lease one member of the team must be adult
+        const errors = []
+
+        if (json && json.paintings) {
+          
+        } else {
+          errors.push({path: [], message: 'Required property "paintings" missing or not an Array'})
+        }
+
+        return errors
+      }
+    }
+
+    // create the editor
+    const container = document.getElementById('jsoneditor')
+    editor = new JSONEditor(container, options, json)
+    editor.expandAll()
+  }).catch(error => {
+    console.error('err', error)
+  });
+</script>
+</body>
+</html>

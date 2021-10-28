@@ -1,0 +1,6 @@
+{
+  "server": {
+    "port": 9090
+  },
+  "settingsPath": "/Users/gabrielstuff/Sources/node/soixante/reve-quantique/osc-motor/settings/settings.json"
+}

@@ -13,8 +13,10 @@ const writeJson = (data) => {
     console.log(data)
     data = JSON.stringify(data, null, 2)
     fs.writeFileSync(settings.getSettings().settingsPath, data)
+    return 0
   } else  {
     console.error('no data received', data)
+    return -1
   }
 }
 
@@ -36,10 +38,19 @@ router.get('/wconfig', (ctx, next) => {
 })
 
 router.post('/saveconfig', (ctx, next) => {
-  writeJson(ctx.request.body)
-  ctx.body = {
-    msg: 'config written'
+  let res = writeJson(ctx.request.body)
+  if (res === 0) {
+    ctx.body = {
+      error: false,
+      msg: 'La configuration a été sauvegardée.'
+    }
+  } else {
+    ctx.body = {
+      error: true,
+      msg: 'Une erreur s\'est produite.'
+    }
   }
+  
 })
 
 app

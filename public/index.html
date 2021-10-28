@@ -35,7 +35,12 @@
   
   document.getElementById('saveJson').onclick = async () => {
     let newData = editor.get()
-    const json = await ky.post('/saveconfig', {json: newData}).json()
+    const res = await ky.post('/saveconfig', {json: newData}).json()
+    if (res.error) {
+      alert(res.msg)
+    } else {
+      alert(res.msg)
+    }
   }
 
 
